@@ -14,7 +14,7 @@ done
 while [[ ! -f $KEYSTORE_FILE ]]; do
   read -e -r -p "Enter a path to keystore settings file: " KEYSTORE_FILE
 done
-while [[ ! ($APP_ID =~ ^[a-z.]+$) ]]; do
+while [[ ! ($APP_ID =~ ^[a-z0-9.]+$) ]]; do
   read -r -p "Enter package identifier: " APP_ID
 done
 while [[ ! ($APP_NAME =~ ^.+$) ]]; do
