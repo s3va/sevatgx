@@ -1122,6 +1122,7 @@
 
   <item type="id" name="btn_messageMore" />
   <item type="id" name="btn_messageCopy" />
+  <item type="id" name="btn_messageShareText" />
   <item type="id" name="btn_messageCopyLink" />
   <item type="id" name="btn_messageReply" />
   <item type="id" name="btn_messageReplies" />

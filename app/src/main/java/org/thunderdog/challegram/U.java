@@ -14,6 +14,8 @@
  */
 package org.thunderdog.challegram;
 
+import static org.thunderdog.challegram.tool.UI.startActivity;
+
 import android.animation.ValueAnimator;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -3505,6 +3507,18 @@ public class U {
     } else {
       copyTextLegacy(text);
     }
+  }
+
+  public static void shareText (CharSequence text) {
+    //android.util.Log.v("SHARETEXT", text.toString());
+    //android.util.Log.v("SHARETEXT", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, text.toString());
+    sendIntent.setType("text/plain");
+    Intent shareIntent = Intent.createChooser(sendIntent, "Send message text");
+    startActivity(shareIntent);
   }
 
   @SuppressWarnings("deprecation")

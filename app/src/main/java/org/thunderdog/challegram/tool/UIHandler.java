@@ -61,6 +61,7 @@ public class UIHandler extends Handler {
   private static final int INVALIDATE_VIEW = 23;
   /*private static final int INIT_CHAT = 24;
   private static final int INIT_DEFAULT = 25;*/
+  private static final int SHARE_TEXT = 26;
   private static final int INVALIDATE = 27;
   private static final int COPY_TEXT = 28;
   private static final int LAYOUT_VIEW = 29;
@@ -257,7 +258,9 @@ public class UIHandler extends Handler {
   public void copyText (CharSequence text, int toast) {
     sendMessage(Message.obtain(this, COPY_TEXT, toast, 0, text));
   }
-
+  public void shareText (CharSequence text, int toast) {
+    sendMessage(Message.obtain(this, SHARE_TEXT, toast, 0, text));
+  }
   public void openNumber (String number) {
     sendMessage(Message.obtain(this, OPEN_NUMBER, number));
   }
@@ -367,6 +370,22 @@ public class UIHandler extends Handler {
         }
         break;
       }
+
+      case SHARE_TEXT: {
+        //android.util.Log.v("SHARE_TEXT",msg.obj.toString());
+        //android.util.Log.v("SHARE_TEXT","mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+        try {
+          U.shareText((CharSequence) msg.obj);
+//          if (!Device.HAS_BUILTIN_CLIPBOARD_TOASTS && msg.arg1 != 0) {
+//            showCustomToast(msg.arg1, Toast.LENGTH_SHORT, 0);
+//          }
+        } catch (Throwable t) {
+          Log.w("Failed to share text", t);
+          showToast(R.string.CopyTextFailed, Toast.LENGTH_SHORT);
+        }
+        break;
+      }
+
       case OPEN_GALLERY: {
         Intents.openGallery((BaseActivity) msg.obj, msg.arg1 == 1);
         break;

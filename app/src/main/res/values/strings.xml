@@ -574,6 +574,7 @@
   <string name="Link">Link</string>
   <string name="Copy">Copy</string>
   <string name="CopyText">Copy text</string>
+  <string name="ShareText">Share text</string>
   <string name="CopyCoordinates">Copy coordinates</string>
   <string name="CopiedCoordinates">Coordinates have been copied to the clipboard</string>
   <string name="CopyLink">Copy link</string>

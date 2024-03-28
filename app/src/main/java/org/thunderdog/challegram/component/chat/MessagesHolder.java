@@ -70,6 +70,7 @@ public class MessagesHolder extends RecyclerView.ViewHolder {
     if (viewType >= TYPE_MESSAGE_VIEW_GROUP) {
       ((MessageViewGroup) itemView).setMessage(message);
     } else {
+      //Log.v("XXXXXXXX","Yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy: " + message.getSender().getUserId());
       ((MessageView) itemView).setMessage(message);
     }
   }
