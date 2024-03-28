@@ -752,7 +752,9 @@ public class UI {
   public static void copyText (CharSequence text, @StringRes int toast) {
     getAppHandler().copyText(text, toast);
   }
-
+  public static void shareText (CharSequence text, @StringRes int toast) {
+    getAppHandler().shareText(text, toast);
+  }
   public static void openNumber (String number) {
     getAppHandler().openNumber(number);
   }

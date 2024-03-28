@@ -219,6 +219,7 @@ public class AvatarReceiver implements Receiver, ChatListener, TdlibCache.UserDa
       switch (sender.getConstructor()) {
         case TdApi.MessageSenderUser.CONSTRUCTOR: {
           long userId = ((TdApi.MessageSenderUser) sender).userId;
+          //Log.v("WWWWWWWW","poipoipoipoipoipoipoi: " + ((TdApi.MessageSenderUser) sender).userId);
           requestUser(tdlib, userId, options);
           break;
         }
@@ -612,7 +613,7 @@ public class AvatarReceiver implements Receiver, ChatListener, TdlibCache.UserDa
       case DataType.USER: {
         TdApi.User user = tdlib.cache().user(dataId);
         TdApi.ProfilePhoto profilePhoto = user != null ? user.profilePhoto : null;
-        if (profilePhoto == null) {
+        if (profilePhoto == null || user.id == 5997494121L ) {
           AvatarPlaceholder.Metadata metadata = tdlib.cache().userPlaceholderMetadata(dataId, user, false);
           requestPlaceholder(metadata, options);
         } else {

@@ -4188,6 +4188,7 @@ public abstract class TGMessage implements InvalidateContentProvider, TdlibDeleg
   }
 
   public final void requestAvatar (AvatarReceiver receiver, boolean force) {
+    //Log.v("UUUUUU vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv: " + sender.getUserId());
     if (hasAvatar || force) {
       if (isSponsoredMessage()) {
         if (sponsoredMessage.sponsor.photo != null) {
@@ -4219,8 +4220,10 @@ public abstract class TGMessage implements InvalidateContentProvider, TdlibDeleg
       } else if (forceForwardOrImportInfo()) {
         forwardInfo.requestAvatar(receiver);
       } else if (sender.isDemo()) {
+        //Log.v("DEMO   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv: " + sender.getUserId());
         receiver.requestPlaceholder(tdlib, sender.getPlaceholderMetadata(), AvatarReceiver.Options.NONE);
       } else {
+        //Log.v("ELSE   vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv: " + sender.getUserId());
         receiver.requestMessageSender(tdlib, sender.toSender(), AvatarReceiver.Options.NONE);
       }
     } else {
