@@ -57,6 +57,7 @@ import org.thunderdog.challegram.service.NetworkListenerService;
 import org.thunderdog.challegram.telegram.TdlibDelegate;
 import org.thunderdog.challegram.telegram.TdlibManager;
 import org.thunderdog.challegram.theme.Theme;
+import org.thunderdog.challegram.ui.ProfileController;
 import org.thunderdog.challegram.unsorted.AppState;
 import org.thunderdog.challegram.unsorted.Settings;
 import org.thunderdog.challegram.util.Unlockable;
@@ -68,6 +69,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -118,6 +121,11 @@ public class UI {
           return;
         appContext = context;
       }
+
+      android.content.SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("myOwnPref",Context.MODE_PRIVATE);
+      Set<String> s = sharedPref.getStringSet(context.getString(R.string.BlockAvatar),new HashSet<>());
+      ProfileController.blockAvatarIds = new HashSet<>(s);
+
       AppState.initApplication();
       if (TEST_MODE != TEST_MODE_AUTO && DeviceUtils.isTestLabDevice(context)) {
         TEST_MODE = TEST_MODE_AUTO;

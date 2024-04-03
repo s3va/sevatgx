@@ -17,6 +17,7 @@ package org.thunderdog.challegram.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -52,6 +53,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.drinkless.tdlib.Client;
 import org.drinkless.tdlib.TdApi;
 import org.thunderdog.challegram.BaseActivity;
+import org.thunderdog.challegram.BaseApplication;
 import org.thunderdog.challegram.BuildConfig;
 import org.thunderdog.challegram.Log;
 import org.thunderdog.challegram.R;
@@ -132,7 +134,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -614,6 +618,8 @@ public class ProfileController extends ViewController<ProfileController.Args> im
     if (mode == Mode.USER && user.id != myUserId && !TD.isBot(user)) {
       ids.append(R.id.btn_newSecretChat);
       strings.append(R.string.StartEncryptedChat);
+      ids.append(R.id.more_btn_blockAvatar);
+      strings.append(ProfileController.blockAvatarIds.contains(Long.toString(user.id)) ? R.string.UnBlockAvatar : R.string.BlockAvatar);
     }
 
     if (isBot) {
@@ -711,6 +717,8 @@ public class ProfileController extends ViewController<ProfileController.Args> im
     navigateTo(c);
   }
 
+  public static Set<String> blockAvatarIds = new HashSet<>();
+
   @Override
   public void onMoreItemPressed (int id) {
     if (tdlib.ui().processLeaveButton(this, null, getChatId(), id, null)) {
@@ -762,6 +770,58 @@ public class ProfileController extends ViewController<ProfileController.Args> im
                   tdlib.okHandler().onResult(result);
                 }
               });
+            }
+          } else if (id == R.id.more_btn_blockAvatar) {
+            //final boolean needBlock = !tdlib.chatFullyBlocked(chat.id);
+            final boolean isBot = tdlib.isBotChat(chat.id);
+
+            SharedPreferences sharedPref = context().getApplicationContext().getSharedPreferences("myOwnPref",Context.MODE_PRIVATE);
+            Set<String> s = sharedPref.getStringSet(context.getString(R.string.BlockAvatar),new HashSet<>());
+            blockAvatarIds = new HashSet<>(s);
+            final boolean needBlock = !blockAvatarIds.contains(Long.toString(chat.id));
+
+            if (needBlock) {
+              showOptions(
+                Lang.getStringBold(isBot ? R.string.BlockBotConfirm : R.string.BlockUserConfirm,
+                tdlib.chatTitle(chat.id)),
+                new int[] {R.id.btn_blockSender, R.id.btn_cancel},
+                new String[] {
+                  Lang.getString(isBot ? R.string.BlockBot : R.string.BlockContact),
+                  Lang.getString(R.string.Cancel)
+                },
+                new int[] {OptionColor.RED, OptionColor.NORMAL},
+                new int[] {R.drawable.baseline_block_24, R.drawable.baseline_cancel_24},
+                (itemView, id1) -> {
+                  if (!isDestroyed() && id1 == R.id.btn_blockSender) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    blockAvatarIds.add(String.valueOf(chat.id));
+                    editor.putStringSet(context.getString(R.string.BlockAvatar),blockAvatarIds);
+                    editor.apply();
+
+                    //tdlib.blockSender(tdlib.sender(chat.id), new TdApi.BlockListMain(), result -> {
+                    //  if (TD.isOk(result)) {
+                    //    UI.showToast(Lang.getStringBold(isBot ? R.string.BlockedBot : R.string.BlockedUser, tdlib.chatTitle(chat.id)), Toast.LENGTH_SHORT);
+                    //  } else {
+                    //    tdlib.okHandler().onResult(result);
+                    //  }
+                    //});
+                  }
+                  return true;
+                }
+              );
+            } else {
+              SharedPreferences.Editor editor = sharedPref.edit();
+              blockAvatarIds.remove(String.valueOf(chat.id));
+              editor.putStringSet(context.getString(R.string.BlockAvatar),blockAvatarIds);
+              editor.apply();
+
+              //tdlib.unblockSender(tdlib.sender(chat.id), result -> {
+              //  if (TD.isOk(result)) {
+              //    UI.showToast(Lang.getStringBold(isBot ? R.string.UnblockedBot : R.string.UnblockedUser, tdlib.chatTitle(chat.id)), Toast.LENGTH_SHORT);
+              //  } else {
+              //    tdlib.okHandler().onResult(result);
+              //  }
+              //});
             }
           } else if (id == R.id.more_btn_delete) {
             tdlib.ui().deleteContact(this, user.id);
@@ -837,6 +897,14 @@ public class ProfileController extends ViewController<ProfileController.Args> im
     } else {
       return R.string.PeerId;
     }
+  }
+
+  public boolean blockedAvatar(){
+    SharedPreferences sharedPref = context().getApplicationContext().getSharedPreferences("myOwnPref",Context.MODE_PRIVATE);
+    Set<String> s = sharedPref.getStringSet(context.getString(R.string.BlockAvatar),new HashSet<>());
+    Set<String> newSet = new HashSet<>(s);
+    final boolean needBlock = !newSet.contains(Long.toString(chat.id));
+    return true;
   }
 
   @Override
