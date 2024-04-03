@@ -30,6 +30,7 @@ import org.thunderdog.challegram.tool.PorterDuffPaint;
 import org.thunderdog.challegram.tool.Screen;
 import org.thunderdog.challegram.tool.UI;
 import org.thunderdog.challegram.tool.Views;
+import org.thunderdog.challegram.ui.ProfileController;
 import org.thunderdog.challegram.util.DrawableProvider;
 import org.thunderdog.challegram.util.text.Letters;
 import org.thunderdog.challegram.util.text.Text;
@@ -613,7 +614,9 @@ public class AvatarReceiver implements Receiver, ChatListener, TdlibCache.UserDa
       case DataType.USER: {
         TdApi.User user = tdlib.cache().user(dataId);
         TdApi.ProfilePhoto profilePhoto = user != null ? user.profilePhoto : null;
-        if (profilePhoto == null || user.id == 5997494121L ) {
+        //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferencesName(Appli)
+        //if (profilePhoto == null || user.id == 5997494121L || user.id == 412374712L ) {
+        if (profilePhoto == null || ProfileController.blockAvatarIds.contains(Long.toString(user.id)) ) {
           AvatarPlaceholder.Metadata metadata = tdlib.cache().userPlaceholderMetadata(dataId, user, false);
           requestPlaceholder(metadata, options);
         } else {

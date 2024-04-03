@@ -87,6 +87,7 @@
   <item type="id" name="more_btn_viewAdmins" />
   <item type="id" name="more_btn_viewStats" />
   <item type="id" name="more_btn_block" />
+  <item type="id" name="more_btn_blockAvatar" />
   <item type="id" name="more_btn_privacy" />
   <item type="id" name="more_btn_unblock" />
   <item type="id" name="more_btn_clearCache" />
