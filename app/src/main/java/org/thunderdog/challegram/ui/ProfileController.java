@@ -920,7 +920,7 @@ public class ProfileController extends ViewController<ProfileController.Args> im
     } else if (id == R.id.btn_copyUsername) {
       String username = getProfileUsername();
       if (!StringUtils.isEmpty(username)) {
-        UI.copyText("@" + username, R.string.CopiedUsername);
+        UI.copyText("@" + username + " " + getPeerId(), R.string.CopiedUsername);
       }
     } else if (id == R.id.btn_peer_id_copy) {
       UI.copyText(Long.toString(getPeerId()), R.string.CopiedPeerId);
@@ -2087,22 +2087,22 @@ public class ProfileController extends ViewController<ProfileController.Args> im
 
         return TD.toCharSequence(formattedText);
       } else if (!tdlib.isUserChat(chat) || tdlib.isBotChat(chat)) {
-        return tdlib.tMeUrl(usernames, true);
+        return tdlib.tMeUrl(usernames, true) + " " + getPeerId();
       }
     }
-    return Lang.getString(R.string.Username);
+    return Lang.getString(R.string.Username) + " " + getPeerId();
   }
 
   private String getUsernameData () {
     TdApi.Usernames usernames = tdlib.chatUsernames(chat);
     if (usernames != null && Td.hasUsername(usernames)) {
       if (tdlib.isUserChat(chat)) { // Bots + Users: @username
-        return "@" + Td.primaryUsername(usernames);
+        return "@" + Td.primaryUsername(usernames)+ " " + getPeerId();
       } else { // Otherwise: /username
-        return "/" + Td.primaryUsername(usernames);
+        return "/" + Td.primaryUsername(usernames)+ " " + getPeerId();
       }
     } else {
-      return "";
+      return "" + getPeerId();
     }
   }
 
